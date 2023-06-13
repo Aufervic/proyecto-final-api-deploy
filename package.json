@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "dev": "ts-node-dev --respawn ./index.ts",
-    "build": "tsc"
+    "start": "node ./index.js"
   },
   "keywords": [],
   "author": "",
