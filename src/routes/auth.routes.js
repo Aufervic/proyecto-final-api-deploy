@@ -7,4 +7,6 @@ const authRouter = (0, express_1.Router)();
 authRouter.post('/signup', authHandlers_1.signUpHandler);
 // login
 authRouter.post('/signin', authHandlers_1.signInHandler);
+// cerrar sesion
+authRouter.post('/logout', authHandlers_1.logOutHandler);
 exports.default = authRouter;

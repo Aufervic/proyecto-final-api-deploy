@@ -12,14 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = __importDefault(require("../models/User"));
-const signIn = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield User_1.default.findOne({ email });
-    if (!user)
-        throw new Error('The email not exists');
-    // corregir la comparación, usar bcrypt
-    if (user.password !== password)
-        throw new Error('The username or password are incorrect');
-    return { access: true };
+// encuentra un UserGame segun los datos proporcionados
+// retorna una lista de UserGames
+const UserGame_1 = __importDefault(require("../../models/UserGame"));
+const findUserGame = (userGameProps) => __awaiter(void 0, void 0, void 0, function* () {
+    const userGame = yield UserGame_1.default.find(userGameProps);
+    return userGame;
 });
-exports.default = signIn;
+exports.default = findUserGame;

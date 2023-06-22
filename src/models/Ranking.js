@@ -10,57 +10,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typegoose_1 = require("@typegoose/typegoose");
-class User {
+class Ranking {
 }
 __decorate([
-    (0, typegoose_1.prop)({ required: true, unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "password", void 0);
+], Ranking.prototype, "user", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], Ranking.prototype, "cohorte", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], Ranking.prototype, "points", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "lastname", void 0);
+], Ranking.prototype, "date", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "cohort", void 0);
-__decorate([
-    (0, typegoose_1.prop)(),
-    __metadata("design:type", String)
-], User.prototype, "group", void 0);
-__decorate([
-    (0, typegoose_1.prop)(),
-    __metadata("design:type", Date
-    // país
-    )
-], User.prototype, "birthdate", void 0);
-__decorate([
-    (0, typegoose_1.prop)(),
-    __metadata("design:type", String)
-], User.prototype, "country", void 0);
-__decorate([
-    (0, typegoose_1.prop)(),
-    __metadata("design:type", Object)
-], User.prototype, "authMethod", void 0);
+], Ranking.prototype, "type", void 0);
 __decorate([
     (0, typegoose_1.prop)({ required: true, default: false }),
     __metadata("design:type", Boolean)
-], User.prototype, "isDeleted", void 0);
-__decorate([
-    (0, typegoose_1.prop)(),
-    __metadata("design:type", String)
-], User.prototype, "image", void 0);
-const UserModel = (0, typegoose_1.getModelForClass)(User);
-exports.default = UserModel;
+], Ranking.prototype, "isDeleted", void 0);
+const RankingModel = (0, typegoose_1.getModelForClass)(Ranking);
+exports.default = RankingModel;
