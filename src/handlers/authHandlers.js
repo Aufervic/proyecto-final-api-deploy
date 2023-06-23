@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logOutHandler = exports.signInHandler = exports.signUpHandler = void 0;
+exports.logOutHandler = exports.thirdSignInHandler = exports.ownSignInHandler = exports.signUpHandler = void 0;
 const signUp_1 = __importDefault(require("../controllers/authControllers/signUp"));
 const thirdSignIn_1 = __importDefault(require("../controllers/authControllers/thirdSignIn"));
 const ownSignIn_1 = __importDefault(require("../controllers/authControllers/ownSignIn"));
@@ -21,7 +21,7 @@ const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const userData = req.body;
     try {
         if (!userData) {
-            return res.status(400).json({ error: 'please enter user data' });
+            return res.status(400).json({ error: 'Missing email or password' });
         }
         const user = yield (0, signUp_1.default)(userData);
         res.status(200).json(user);
@@ -31,42 +31,35 @@ const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.signUpHandler = signUpHandler;
-function _ownSignInHandler(req, res) {
+function ownSignInHandler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ error: 'please enter username, password and email' });
+        try {
+            const { email, password } = req.body;
+            if (!email || !password) {
+                return res.status(400).json({ error: 'please enter username, password and email' });
+            }
+            const result = yield (0, ownSignIn_1.default)({ email, password });
+            res.status(200).json(result);
         }
-        const result = yield (0, ownSignIn_1.default)({ email, password });
-        res.status(200).json(result);
+        catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
     });
 }
-function _thirdSignInHandler(req, res) {
+exports.ownSignInHandler = ownSignInHandler;
+function thirdSignInHandler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const userData = req.body;
-        const result = yield (0, thirdSignIn_1.default)(userData);
-        res.status(200).json(result);
+        try {
+            const userData = req.body;
+            const result = yield (0, thirdSignIn_1.default)(userData);
+            res.status(200).json(result);
+        }
+        catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
     });
 }
-const signInHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // logueo directo
-    // logueo por terceros
-    // si es por terceros tiene que indicar el type 'google' , 'facebook', 'github'...
-    // tambien debe enviar el token y otros datos
-    const { type } = req.body;
-    try {
-        if (!type) {
-            yield _ownSignInHandler(req, res);
-        }
-        else {
-            yield _thirdSignInHandler(req, res);
-        }
-    }
-    catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-exports.signInHandler = signInHandler;
+exports.thirdSignInHandler = thirdSignInHandler;
 const logOutHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // eliminar la autenticación (token)
     try {

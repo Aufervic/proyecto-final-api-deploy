@@ -25,4 +25,7 @@ router.use('/payment', payment_routes_1.default);
 router.use('/usergame', userGame_routes_1.default);
 router.use('/probe', probe_routes_1.default);
 router.use('/chat', chat_route_1.default);
+router.use('/', (req, res) => {
+    res.send("HM 0.1.0");
+});
 exports.default = router;

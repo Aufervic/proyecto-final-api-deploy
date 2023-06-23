@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const createOrder = () => __awaiter(void 0, void 0, void 0, function* () {
+const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0, void 0, function* () {
     // Creamos el pedido
     const order = {
         intent: "CAPTURE",
@@ -21,7 +21,7 @@ const createOrder = () => __awaiter(void 0, void 0, void 0, function* () {
             {
                 amount: {
                     currency_code: "USD",
-                    value: "105.70",
+                    value: donation,
                 },
                 description: "Ayuda para pagar HENRY",
             },
@@ -30,7 +30,7 @@ const createOrder = () => __awaiter(void 0, void 0, void 0, function* () {
             brand_name: "ArepasCamilo",
             landing_page: "LOGIN",
             user_action: "PAY_NOW",
-            return_url: `http://localhost:3001/payment/capture-order`,
+            return_url: `http://localhost:3001/payment/capture-order?name=${name}&email=${email}`,
             cancel_url: `http://localhost:3001/payment/cancel-order`,
         },
     };

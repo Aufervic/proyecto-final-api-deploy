@@ -7,4 +7,5 @@ const payment = (0, express_1.Router)();
 payment.post('/create-order', paymentHandlers_1.createOrderHandler);
 payment.get('/capture-order', paymentHandlers_1.captureOrderHandler);
 payment.get('/cancel-order', paymentHandlers_1.cancelOrderHandler);
+payment.get('/all-donations', paymentHandlers_1.getAllDonationsHandler);
 exports.default = payment;

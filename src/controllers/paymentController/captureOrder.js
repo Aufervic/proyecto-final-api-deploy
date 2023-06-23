@@ -20,9 +20,10 @@ const captureOrder = (token) => __awaiter(void 0, void 0, void 0, function* () {
     };
     // Capturamos la orden
     // Si el usuario paga, devuelve objeto con la confirmación
-    const { data } = yield axios_1.default.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${token.token}/capture`, {}, // no enviamos datos por el body
+    const { data } = yield axios_1.default.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${token}/capture`, {}, // no enviamos datos por el body
     {
         auth
     });
+    return data;
 });
 exports.default = captureOrder;

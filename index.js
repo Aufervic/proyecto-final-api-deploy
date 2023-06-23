@@ -16,6 +16,6 @@ mongoose_1.default
     });
 })
     .catch((error) => {
-    console.error("SWEET: Error in the connection with mongoBD");
+    console.error("F en el chat: Error in the connection");
     console.error(error);
 });

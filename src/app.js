@@ -11,6 +11,7 @@ const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const passport_2 = __importDefault(require("./middlewares/passport"));
 const routes_1 = __importDefault(require("./routes"));
+const camilo = 'camilo';
 // initializations
 const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
@@ -31,10 +32,11 @@ passport_1.default.use(passport_2.default);
 app.use('/', routes_1.default);
 // socket
 io.on('connection', (socket) => {
+    console.log("connected", socket.id);
     socket.on('message', (message) => {
         socket.broadcast.emit('message', {
-            body: message,
-            from: socket.id
+            body: message.body,
+            from: message.from
         });
     });
 });

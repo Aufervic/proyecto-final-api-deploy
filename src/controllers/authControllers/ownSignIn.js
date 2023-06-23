@@ -14,13 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../../models/User"));
 const helpers_1 = require("../../helpers");
-const signIn = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield User_1.default.findOne({ email });
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const ownSignIn = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.default.findOne({ email, isDeleted: false });
     if (!user)
         throw new Error('The email not exists');
-    // corregir la comparación, usar bcrypt
-    if (user.password !== password)
+    let checkPass = yield bcrypt_1.default.compare(password, user.password);
+    if (!checkPass)
         throw new Error('The username or password are incorrect');
     return { access: true, token: (0, helpers_1.createToken)({ id: user._id, email: user.name }), user };
 });
-exports.default = signIn;
+exports.default = ownSignIn;

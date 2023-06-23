@@ -12,16 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = __importDefault(require("../../models/User"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const helpers_1 = require("../../helpers");
-const signUp = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    // userData.birthdate = new Date(userData.birthdate)
-    // console.log()
-    if (userData) { //1234
-        userData.password = yield bcrypt_1.default.hash(userData.password, 10); //$2b$10$ZgjhmJXXRzXM6P.vvCiaUuBOyIbAt5dg.l93OEMCdgu21weCDPZU6
-    }
-    const newUser = yield User_1.default.create(userData);
-    return { access: true, token: (0, helpers_1.createToken)({ id: newUser._id, email: newUser.name }), user: newUser };
+const Donation_1 = __importDefault(require("../../models/Donation"));
+const getAllDonations = () => __awaiter(void 0, void 0, void 0, function* () {
+    const donations = yield Donation_1.default.find();
+    return donations;
 });
-exports.default = signUp;
+exports.default = getAllDonations;
