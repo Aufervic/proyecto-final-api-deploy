@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserHandler = exports.existsUserEmailHandler = exports.getAllUsersHandler = exports.getUserByIDHandler = exports.reviveUserByIDHandler = exports.deleteUserHandler = exports.updateUserHandler = void 0;
+exports.findUsersGroupByEmailHandler = exports.findUserHandler = exports.existsUserEmailHandler = exports.getAllUsersHandler = exports.getUserByIDHandler = exports.reviveUserByIDHandler = exports.deleteUserHandler = exports.updateUserHandler = void 0;
 const updateUser_1 = __importDefault(require("../controllers/userControllers/updateUser"));
 const deleteUser_1 = __importDefault(require("../controllers/userControllers/deleteUser"));
 const getUserByID_1 = __importDefault(require("../controllers/userControllers/getUserByID"));
@@ -20,11 +20,13 @@ const findUser_1 = __importDefault(require("../controllers/userControllers/findU
 const getAllUsers_1 = __importDefault(require("../controllers/userControllers/getAllUsers"));
 const existsUserEmail_1 = __importDefault(require("../controllers/userControllers/existsUserEmail"));
 const reviveUserByID_1 = __importDefault(require("../controllers/userControllers/reviveUserByID"));
+const findUsersGroupByEmail_1 = __importDefault(require("../controllers/userControllers/findUsersGroupByEmail"));
 const updateUserHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = req.body;
+    const { id } = req.params;
     try {
         // hacer las comprobaciones aqui
-        const newUser = yield (0, updateUser_1.default)(userData);
+        const newUser = yield (0, updateUser_1.default)(id, userData);
         res.status(200).json(newUser);
     }
     catch (err) {
@@ -73,10 +75,9 @@ const getUserByIDHandler = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getUserByIDHandler = getUserByIDHandler;
 const getAllUsersHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userProps = req.body;
     try {
         // hacer las comprobaciones aqui
-        const users = yield (0, getAllUsers_1.default)(userProps);
+        const users = yield (0, getAllUsers_1.default)();
         res.status(200).json(users);
     }
     catch (err) {
@@ -109,3 +110,16 @@ const findUserHandler = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.findUserHandler = findUserHandler;
+const findUsersGroupByEmailHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.query;
+    try {
+        if (!email)
+            return res.status(400).json({ message: "No proporcionaste email" });
+        const usersGroup = yield (0, findUsersGroupByEmail_1.default)(email.toString());
+        res.status(200).json(usersGroup);
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+exports.findUsersGroupByEmailHandler = findUsersGroupByEmailHandler;

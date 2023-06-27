@@ -12,22 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Encuentra el grupo de usuarios según un email
+// y solo devuelve algunas propiedades
+// retorna una lista de usuarios
 const User_1 = __importDefault(require("../../models/User"));
-const helpers_1 = require("../../helpers");
-const thirdSignIn = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    // crear al usuario y loguearlo
-    // si ya está creado agregar el nuevo (si lo es) método de logueo a authMethod
-    // formatear data
-    userData.authMethod = {
-        type: userData.type,
-        token: userData.token,
-    };
-    // FALTA deberiamos buscar si existe, no permitir que cree con un email que ya existe
-    // si existe añadir el nuevo método de autenticacion o cambiar el ya guardado, sin bor
-    // CREAR
-    let user = yield User_1.default.create(userData);
-    user.status = 'online';
-    yield user.save();
-    return { access: true, token: (0, helpers_1.createToken)({ id: user._id, email: user.name }), user: user };
+const findUsersGroupByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    // por el momento no importa que esté eliminado
+    const user = yield User_1.default.findOne({ email });
+    if (!user)
+        return [];
+    // const users = await User.find({group: user.group, isDeleted: false})
+    // por el momento no restringimos el grupo
+    const users = [user];
+    return users.map((user) => {
+        return {
+            _id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            group: user.group,
+            // isConnected: false,
+        };
+    });
 });
-exports.default = thirdSignIn;
+exports.default = findUsersGroupByEmail;

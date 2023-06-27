@@ -12,17 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reviveChatByIDHandler = exports.getChatByIDHandler = exports.findChatHandler = exports.deleteChatHandler = exports.updateChatHandler = exports.getAllChatsHandler = exports.createChatHandler = void 0;
-const createChat_1 = __importDefault(require("../controllers/chatControllerss/createChat"));
-const getAllChats_1 = __importDefault(require("../controllers/chatControllerss/getAllChats"));
-const updateChat_1 = __importDefault(require("../controllers/chatControllerss/updateChat"));
-const deleteChat_1 = __importDefault(require("../controllers/chatControllerss/deleteChat"));
-const findChat_1 = __importDefault(require("../controllers/chatControllerss/findChat"));
-const getChatByID_1 = __importDefault(require("../controllers/chatControllerss/getChatByID"));
-const reviveChatByID_1 = __importDefault(require("../controllers/chatControllerss/reviveChatByID"));
+exports.chatRoomsHandler = exports.reviveChatByIDHandler = exports.getChatByIDHandler = exports.findChatHandler = exports.deleteChatHandler = exports.updateChatHandler = exports.getAllChatsHandler = exports.createChatHandler = void 0;
+const createChat_1 = __importDefault(require("../controllers/chatControllers/createChat"));
+const getAllChats_1 = __importDefault(require("../controllers/chatControllers/getAllChats"));
+const updateChat_1 = __importDefault(require("../controllers/chatControllers/updateChat"));
+const deleteChat_1 = __importDefault(require("../controllers/chatControllers/deleteChat"));
+const findChat_1 = __importDefault(require("../controllers/chatControllers/findChat"));
+const getChatByID_1 = __importDefault(require("../controllers/chatControllers/getChatByID"));
+const reviveChatByID_1 = __importDefault(require("../controllers/chatControllers/reviveChatByID"));
 const createChatHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ChatData = req.body;
     try {
+        console.log('malparido');
         const newChat = yield (0, createChat_1.default)(ChatData);
         res.status(200).json(newChat);
     }
@@ -96,3 +97,10 @@ const reviveChatByIDHandler = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.reviveChatByIDHandler = reviveChatByIDHandler;
+const chatRoomsHandler = (req, res) => {
+    let rooms = ['general', 'tech', 'finance', 'crypto'];
+    console.log(rooms);
+    console.log('Hola desde rooms');
+    res.status(200).json({ rooms });
+};
+exports.chatRoomsHandler = chatRoomsHandler;

@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = __importDefault(require("../../models/User"));
-const updateUser = (id, userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const updatedUser = yield User_1.default.findByIdAndUpdate(id, userData, { new: true });
-    return updatedUser;
+// Esta ruta está protegida
+const getProtecDev = () => __awaiter(void 0, void 0, void 0, function* () {
+    return { message: "Todo ok" };
 });
-exports.default = updateUser;
+exports.default = getProtecDev;

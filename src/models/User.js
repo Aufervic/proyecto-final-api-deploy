@@ -31,7 +31,7 @@ __decorate([
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
-], User.prototype, "lastname", void 0);
+], User.prototype, "lastName", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -57,10 +57,22 @@ __decorate([
 __decorate([
     (0, typegoose_1.prop)({ required: true, default: false }),
     __metadata("design:type", Boolean)
+], User.prototype, "isBanned", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: false }),
+    __metadata("design:type", Boolean)
 ], User.prototype, "isDeleted", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
 ], User.prototype, "image", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ default: { test: 'required_property' } }),
+    __metadata("design:type", Object)
+], User.prototype, "newMessages", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ default: 'offline' }),
+    __metadata("design:type", String)
+], User.prototype, "status", void 0);
 const UserModel = (0, typegoose_1.getModelForClass)(User);
 exports.default = UserModel;

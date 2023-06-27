@@ -13,21 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../../models/User"));
-const helpers_1 = require("../../helpers");
-const thirdSignIn = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    // crear al usuario y loguearlo
-    // si ya está creado agregar el nuevo (si lo es) método de logueo a authMethod
-    // formatear data
-    userData.authMethod = {
-        type: userData.type,
-        token: userData.token,
-    };
-    // FALTA deberiamos buscar si existe, no permitir que cree con un email que ya existe
-    // si existe añadir el nuevo método de autenticacion o cambiar el ya guardado, sin bor
-    // CREAR
-    let user = yield User_1.default.create(userData);
-    user.status = 'online';
-    yield user.save();
-    return { access: true, token: (0, helpers_1.createToken)({ id: user._id, email: user.name }), user: user };
+const postDev = (devData) => __awaiter(void 0, void 0, void 0, function* () {
+    const results = yield User_1.default.updateMany({ newMessages: {} });
+    return results;
 });
-exports.default = thirdSignIn;
+exports.default = postDev;

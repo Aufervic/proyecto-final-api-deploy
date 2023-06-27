@@ -4,11 +4,16 @@ const express_1 = require("express");
 const authHandlers_1 = require("../handlers/authHandlers");
 const authRouter = (0, express_1.Router)();
 // create user
-authRouter.post('/signup', authHandlers_1.signUpHandler);
+authRouter.post("/signup", authHandlers_1.signUpHandler);
 // own login
-authRouter.post('/ownsignin', authHandlers_1.ownSignInHandler);
+authRouter.post("/ownsignin", authHandlers_1.ownSignInHandler);
 //third login
-authRouter.post('/thirdsignin', authHandlers_1.thirdSignInHandler);
+authRouter.post("/thirdsignin", authHandlers_1.thirdSignInHandler);
+// ! //////
+// ' Por ahora no hace nada esta ruta, así que usaré la que tengo en el socket en app.ts
 // cerrar sesion
-authRouter.post('/logout', authHandlers_1.logOutHandler);
+// authRouter.post("/logout", logOutHandler);
+// ! //////
+authRouter.post("/checkthird", authHandlers_1.checkThirdHandler);
+authRouter.post("/thirdsignup", authHandlers_1.thirdSignUpHandler);
 exports.default = authRouter;

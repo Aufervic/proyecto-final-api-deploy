@@ -13,24 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../../models/User"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const helpers_1 = require("../../helpers");
 require("dotenv/config");
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const mailgen_1 = __importDefault(require("mailgen"));
-const signUp = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+const thirdSignUp = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     // userData.birthdate = new Date(userData.birthdate)
     // console.log()
-    if (userData) {
-        //1234
-        userData.password = yield bcrypt_1.default.hash(userData.password, 10); //$2b$10$ZgjhmJXXRzXM6P.vvCiaUuBOyIbAt5dg.l93OEMCdgu21weCDPZU6
-    }
     const newUser = yield User_1.default.create(userData);
-    // ! ////////
-    // new chat requirement
-    newUser.status = 'online';
-    yield newUser.save();
-    // ! ////////
     //Configuramos para que pueda recibir emails
     let config = {
         service: "gmail",
@@ -39,6 +29,9 @@ const signUp = (userData) => __awaiter(void 0, void 0, void 0, function* () {
             pass: "xdgpunccyritkucn",
         },
     };
+    // Indicamos online
+    newUser.status = 'online';
+    yield newUser.save();
     let transporter = nodemailer_1.default.createTransport(config);
     let MailGenerator = new mailgen_1.default({
         theme: "default",
@@ -75,7 +68,7 @@ const signUp = (userData) => __awaiter(void 0, void 0, void 0, function* () {
         user: newUser,
     };
 });
-exports.default = signUp;
+exports.default = thirdSignUp;
 // const { userEmail, userName } = req.body
 // let config = {
 //   service: 'gmail',

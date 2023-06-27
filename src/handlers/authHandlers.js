@@ -12,10 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logOutHandler = exports.thirdSignInHandler = exports.ownSignInHandler = exports.signUpHandler = void 0;
+exports.thirdSignUpHandler = exports.checkThirdHandler = exports.logOutHandler = exports.thirdSignInHandler = exports.ownSignInHandler = exports.signUpHandler = void 0;
 const signUp_1 = __importDefault(require("../controllers/authControllers/signUp"));
 const thirdSignIn_1 = __importDefault(require("../controllers/authControllers/thirdSignIn"));
 const ownSignIn_1 = __importDefault(require("../controllers/authControllers/ownSignIn"));
+const checkThird_1 = __importDefault(require("../controllers/authControllers/checkThird"));
+const thirdSignUp_1 = __importDefault(require("../controllers/authControllers/thirdSignUp"));
 const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // a parte de crear debe loguear al usuario
     const userData = req.body;
@@ -23,7 +25,7 @@ const signUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!userData) {
             return res.status(400).json({ error: 'Missing email or password' });
         }
-        const user = yield (0, signUp_1.default)(userData);
+        const user = yield (0, signUp_1.default)(userData); // ! /////
         res.status(200).json(user);
     }
     catch (err) {
@@ -38,7 +40,8 @@ function ownSignInHandler(req, res) {
             if (!email || !password) {
                 return res.status(400).json({ error: 'please enter username, password and email' });
             }
-            const result = yield (0, ownSignIn_1.default)({ email, password });
+            const result = yield (0, ownSignIn_1.default)({ email, password }); // ! /////
+            console.log(result.user.newMessages);
             res.status(200).json(result);
         }
         catch (error) {
@@ -60,6 +63,7 @@ function thirdSignInHandler(req, res) {
     });
 }
 exports.thirdSignInHandler = thirdSignInHandler;
+// ! Por ahora no hace nada 
 const logOutHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // eliminar la autenticación (token)
     try {
@@ -70,3 +74,25 @@ const logOutHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.logOutHandler = logOutHandler;
+const checkThirdHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = req.body;
+    try {
+        const result = yield (0, checkThird_1.default)(userData);
+        res.status(200).json(result);
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+exports.checkThirdHandler = checkThirdHandler;
+const thirdSignUpHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = req.body;
+    try {
+        const result = yield (0, thirdSignUp_1.default)(userData);
+        res.status(200).json(result);
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+exports.thirdSignUpHandler = thirdSignUpHandler;

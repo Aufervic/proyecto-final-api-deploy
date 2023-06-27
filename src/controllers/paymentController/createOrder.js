@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0, void 0, function* () {
+const createOrder = ({ name, donation, email }) => __awaiter(void 0, void 0, void 0, function* () {
     // Creamos el pedido
     const order = {
         intent: "CAPTURE",
@@ -30,8 +30,8 @@ const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0
             brand_name: "ArepasCamilo",
             landing_page: "LOGIN",
             user_action: "PAY_NOW",
-            return_url: `http://localhost:3001/payment/capture-order?name=${name}&email=${email}`,
-            cancel_url: `http://localhost:3001/payment/cancel-order`,
+            return_url: `https://pfapi-production.up.railway.app/payment/capture-order?name=${name}&email=${email}`,
+            cancel_url: `https://pfapi-production.up.railway.app/payment/cancel-order`,
         },
     };
     // Generamos parámetros para enviar como campos de formulario
@@ -42,19 +42,22 @@ const createOrder = ({ name, _id, donation, email }) => __awaiter(void 0, void 0
         password: "EJbIX4_V-KcVW2-0-W9RkaS3x9G8vK0oFwXQQNjdweN9uJLiOgzIcKxKgakV-PvF7e8hPci2tWvxHmZ1",
     };
     // Generando el token
+    console.log(params);
     const { data: { access_token }, } = yield axios_1.default.post("https://api-m.sandbox.paypal.com/v1/oauth2/token", params, {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
         auth,
     });
+    console.log(access_token);
     // Creando pedido con el token generado
     // Devuelve el pedido
-    const { data } = yield axios_1.default.post(` https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
+    const { data } = yield axios_1.default.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders`, order, {
         headers: {
             Authorization: `Bearer ${access_token}`,
         },
     });
+    console.log('paramssssssssssssss');
     return data;
 });
 exports.default = createOrder;

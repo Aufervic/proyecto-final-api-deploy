@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -11,7 +20,8 @@ const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const passport_2 = __importDefault(require("./middlewares/passport"));
 const routes_1 = __importDefault(require("./routes"));
-const camilo = 'camilo';
+const Message_1 = __importDefault(require("./models/Message"));
+const User_1 = __importDefault(require("./models/User"));
 // initializations
 const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
@@ -30,15 +40,112 @@ app.use(express_1.default.json());
 app.use(passport_1.default.initialize());
 passport_1.default.use(passport_2.default);
 app.use('/', routes_1.default);
-// socket
+let group = [];
+// ! ////////
+const getLastMessagesFromRoom = (room) => __awaiter(void 0, void 0, void 0, function* () {
+    let roomMessages = yield Message_1.default.aggregate([
+        { $match: { to: room } },
+        { $group: { _id: '$date', messagesByDate: { $push: '$$ROOT' } } }
+    ]);
+    return roomMessages;
+});
+const sortRoomMessagesByDate = (messages) => {
+    return messages.sort(function (a, b) {
+        let date1 = a._id.split('/');
+        let date2 = b._id.split('/');
+        date1 = date1[2] + date1[0] + date1[1];
+        date2 = date2[2] + date2[0] + date2[1];
+        return date1 < date2 ? -1 : 1;
+    });
+};
+// ! ////////
 io.on('connection', (socket) => {
     console.log("connected", socket.id);
+    /* socket.on('userData', async (userData) =>  {//
+      const {user} = userData
+  
+      if(!group.length){
+        const usersGroup = await findUsersByGroup(user.group)
+        group = usersGroup
+      }
+      
+      const newUser:any = group.find( (u:any) => u.email === user.email)
+  
+      if(!newUser){
+        console.log(group, user)
+        console.log(typeof(user._id))
+      }
+      newUser.socketID = socket.id
+      newUser.isConnected = true
+      
+      socket.emit('currentData', group)
+      socket.broadcast.emit('currentData', group)
+    }) */
     socket.on('message', (message) => {
         socket.broadcast.emit('message', {
             body: message.body,
             from: message.from
         });
     });
+    socket.on('logout', (userData) => {
+        const logoutUser = group.find((user) => user.email === userData.email);
+        if (logoutUser)
+            logoutUser.isConnected = false;
+        console.log('logout', userData.name);
+        socket.broadcast.emit('disconnected', logoutUser);
+    });
+    socket.on('disconnect', () => {
+        const disconnectedUser = group.find((user) => user.isConnected && user.socketID === socket.id);
+        if (disconnectedUser)
+            disconnectedUser.isConnected = false;
+        console.log('disconnect', socket.id);
+    });
+    // ! ////////
+    socket.on('new-user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const members = yield User_1.default.find();
+        members.forEach(m => console.log(m.status));
+        io.emit('new-user', members);
+    }));
+    socket.on('join-room', (room) => __awaiter(void 0, void 0, void 0, function* () {
+        socket.join(room);
+        let roomMessages = yield getLastMessagesFromRoom(room);
+        roomMessages = sortRoomMessagesByDate(roomMessages);
+        // socket.emit('room-messages', roomMessages)
+        socket.emit('room-messages', { room, messages: roomMessages });
+    }));
+    socket.on('message-room', (room, content, sender, time, date) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(`Nuevo mensaje: ${content}`);
+        const newMessage = yield Message_1.default.create({
+            content,
+            from: sender,
+            time,
+            date,
+            to: room
+        });
+        let roomMessages = yield getLastMessagesFromRoom(room);
+        roomMessages = sortRoomMessagesByDate(roomMessages);
+        // io.to(room).emit('room-messages', roomMessages)
+        io.to(room).emit('room-messages', { room, messages: roomMessages });
+        socket.broadcast.emit('notifications', room);
+    }));
+    app.post('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(req.body);
+        try {
+            const { _id, newMessages } = req.body;
+            const user = yield User_1.default.findById(_id);
+            user.status = 'offline';
+            user.newMessages = newMessages;
+            yield user.save();
+            const members = yield User_1.default.find();
+            socket.broadcast.emit('new-user', members);
+            res.status(200).send();
+        }
+        catch (error) {
+            console.log('Mire, un error' + error);
+            res.status(400).send();
+        }
+    }));
+    // ! ////////
 });
 //export default app
 exports.default = httpServer;
